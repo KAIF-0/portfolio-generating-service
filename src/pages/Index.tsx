@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight, CheckCircle, Zap, Star } from 'lucide-react';
+import { Sparkles, ArrowRight, CheckCircle, Zap, Star, Github, Mail, Linkedin, Menu, X } from 'lucide-react';
 import { ResumeUpload } from '@/components/ResumeUpload';
+import { FloatingNavbar } from '@/components/FloatingNavbar';
+import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
@@ -87,8 +89,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-hero font-inter">
+      <FloatingNavbar />
+      
       {/* Hero Section */}
-      <div className="container mx-auto px-6 py-20">
+      <div id="home" className="container mx-auto px-6 py-32">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -218,7 +222,51 @@ const Index = () => {
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </motion.div>
+
+        {/* About Section */}
+        <motion.div
+          id="about"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mt-32 text-center"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-8 font-space">
+            Why Choose Resumify?
+          </h2>
+          <p className="text-xl text-white/80 mb-16 max-w-4xl mx-auto leading-relaxed">
+            Traditional resumes are outdated. Stand out with a modern, interactive portfolio 
+            that showcases your skills and projects in the best possible way.
+          </p>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {[
+              { number: "10K+", label: "Portfolios Created", icon: Star },
+              { number: "95%", label: "Success Rate", icon: CheckCircle },
+              { number: "3 Sec", label: "Generation Time", icon: Zap },
+              { number: "100%", label: "Free to Use", icon: Sparkles }
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.1 }}
+                className="glass rounded-2xl p-6 text-center hover:bg-white/10 transition-all duration-300"
+              >
+                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <stat.icon className="w-8 h-8 text-white" />
+                </div>
+                <div className="text-3xl font-bold text-white mb-2 font-space">
+                  {stat.number}
+                </div>
+                <p className="text-white/70">{stat.label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
+
+      <Footer />
     </div>
   );
 };

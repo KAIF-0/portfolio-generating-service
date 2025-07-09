@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Camera, MapPin, Mail, Phone, Calendar, ExternalLink } from 'lucide-react';
+import { Camera, MapPin, Mail, Phone, Calendar, ExternalLink, Github, Eye, Server, Code, Cloud, Coffee, Gamepad2, Music } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+
+interface SkillCategory {
+  name: string;
+  icon: any;
+  skills: string[];
+}
 
 interface UserData {
   name: string;
@@ -15,7 +21,8 @@ interface UserData {
   photo?: string;
   experience: Experience[];
   projects: Project[];
-  skills: string[];
+  skillCategories: SkillCategory[];
+  softSkills: string[];
   education: Education[];
 }
 
@@ -32,6 +39,8 @@ interface Project {
   description: string;
   technologies?: string[];
   link?: string;
+  github?: string;
+  demo?: string;
 }
 
 interface Education {
@@ -80,16 +89,44 @@ const Portfolio = () => {
             name: "E-commerce Platform",
             description: "Full-stack e-commerce solution with React, Node.js, and PostgreSQL. Features include payment processing, inventory management, and admin dashboard.",
             technologies: ["React", "Node.js", "PostgreSQL", "Stripe"],
-            link: "https://github.com/alexjohnson/ecommerce"
+            link: "https://github.com/alexjohnson/ecommerce",
+            github: "https://github.com/alexjohnson/ecommerce",
+            demo: "https://ecommerce-demo.vercel.app"
           },
           {
             name: "Task Management App",
             description: "Real-time collaborative task management application with drag-and-drop functionality and team collaboration features.",
             technologies: ["React", "Socket.io", "MongoDB"],
-            link: "https://taskapp-demo.com"
+            link: "https://taskapp-demo.com",
+            github: "https://github.com/alexjohnson/taskapp",
+            demo: "https://taskapp-demo.com"
+          },
+          {
+            name: "Weather Dashboard",
+            description: "Real-time weather tracking application with beautiful UI and location-based forecasts.",
+            technologies: ["Vue.js", "Node.js", "OpenWeather API"],
+            github: "https://github.com/alexjohnson/weather",
+            demo: "https://weather-dashboard-demo.com"
           }
         ],
-        skills: ["JavaScript", "TypeScript", "React", "Node.js", "Python", "PostgreSQL", "MongoDB", "AWS", "Docker", "Git"],
+        skillCategories: [
+          {
+            name: "Frontend",
+            icon: Code,
+            skills: ["React", "Vue.js", "TypeScript", "JavaScript", "HTML/CSS", "Tailwind CSS"]
+          },
+          {
+            name: "Backend",
+            icon: Server,
+            skills: ["Node.js", "Python", "Express.js", "REST APIs", "GraphQL"]
+          },
+          {
+            name: "DevOps & Cloud",
+            icon: Cloud,
+            skills: ["AWS", "Docker", "Kubernetes", "CI/CD", "MongoDB", "PostgreSQL"]
+          }
+        ],
+        softSkills: ["Gaming", "Music Production", "Photography", "Cooking", "Traveling", "Reading"],
         education: [
           {
             institution: "University of California, Berkeley",
@@ -266,30 +303,89 @@ const Portfolio = () => {
                 <Card className="glass rounded-2xl p-6 border-white/10 hover:border-white/20 transition-all duration-300 h-full">
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="text-xl font-semibold text-white">{project.name}</h3>
-                    {project.link && (
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-white/60 hover:text-white transition-colors"
-                      >
-                        <ExternalLink className="w-5 h-5" />
-                      </a>
-                    )}
+                    <div className="flex gap-2">
+                      {project.github && (
+                        <motion.a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 bg-white/10 rounded-lg text-white/60 hover:text-white hover:bg-white/20 transition-all duration-300"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          title="View Source Code"
+                        >
+                          <Github className="w-4 h-4" />
+                        </motion.a>
+                      )}
+                      {project.demo && (
+                        <motion.a
+                          href={project.demo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 bg-white/10 rounded-lg text-white/60 hover:text-white hover:bg-white/20 transition-all duration-300"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          title="Live Demo"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </motion.a>
+                      )}
+                      {(!project.github && !project.demo && project.link) && (
+                        <motion.a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 bg-white/10 rounded-lg text-white/60 hover:text-white hover:bg-white/20 transition-all duration-300"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </motion.a>
+                      )}
+                    </div>
                   </div>
                   <p className="text-white/90 mb-4">{project.description}</p>
                   {project.technologies && (
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 mb-4">
                       {project.technologies.map((tech, techIndex) => (
                         <span
                           key={techIndex}
-                          className="px-3 py-1 bg-white/10 rounded-full text-sm text-white/80"
+                          className="px-3 py-1 bg-white/10 rounded-full text-sm text-white/80 hover:bg-white/20 transition-colors"
                         >
                           {tech}
                         </span>
                       ))}
                     </div>
                   )}
+                  
+                  {/* Interactive Action Buttons */}
+                  <div className="flex gap-3 mt-auto pt-4">
+                    {project.demo && (
+                      <Button
+                        asChild
+                        size="sm"
+                        className="flex-1 bg-white/20 hover:bg-white/30 text-white border-0"
+                      >
+                        <a href={project.demo} target="_blank" rel="noopener noreferrer">
+                          <Eye className="w-4 h-4 mr-2" />
+                          Live Demo
+                        </a>
+                      </Button>
+                    )}
+                    {project.github && (
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="flex-1 bg-white/10 border-white/20 text-white hover:bg-white/20"
+                      >
+                        <a href={project.github} target="_blank" rel="noopener noreferrer">
+                          <Github className="w-4 h-4 mr-2" />
+                          Code
+                        </a>
+                      </Button>
+                    )}
+                  </div>
                 </Card>
               </motion.div>
             ))}
@@ -303,19 +399,67 @@ const Portfolio = () => {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mb-16"
         >
-          <h2 className="text-3xl font-bold font-space mb-8 text-white">Skills</h2>
+          <h2 className="text-3xl font-bold font-space mb-8 text-white">Technical Skills</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {userData.skillCategories.map((category, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6 + index * 0.1 }}
+              >
+                <Card className="glass rounded-2xl p-6 border-white/10 hover:border-white/20 transition-all duration-300">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+                      <category.icon className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-white">{category.name}</h3>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {category.skills.map((skill, skillIndex) => (
+                      <motion.span
+                        key={skillIndex}
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.7 + skillIndex * 0.05 }}
+                        className="px-3 py-1 bg-white/10 rounded-full text-sm text-white/80 hover:bg-white/20 transition-colors"
+                      >
+                        {skill}
+                      </motion.span>
+                    ))}
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Soft Skills Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="mb-16"
+        >
+          <h2 className="text-3xl font-bold font-space mb-8 text-white">Interests & Hobbies</h2>
           <Card className="glass rounded-2xl p-8 border-white/10">
-            <div className="flex flex-wrap gap-3">
-              {userData.skills.map((skill, index) => (
-                <motion.span
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {userData.softSkills.map((skill, index) => (
+                <motion.div
                   key={index}
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.6 + index * 0.05 }}
-                  className="px-4 py-2 bg-white/15 rounded-full text-white font-medium hover:bg-white/25 transition-colors"
+                  transition={{ delay: 0.7 + index * 0.1 }}
+                  className="flex items-center gap-3 p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
                 >
-                  {skill}
-                </motion.span>
+                  <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                    {skill === "Gaming" && <Gamepad2 className="w-4 h-4 text-white" />}
+                    {skill === "Music Production" && <Music className="w-4 h-4 text-white" />}
+                    {skill === "Cooking" && <Coffee className="w-4 h-4 text-white" />}
+                    {(skill !== "Gaming" && skill !== "Music Production" && skill !== "Cooking") && <Coffee className="w-4 h-4 text-white" />}
+                  </div>
+                  <span className="text-white/90 font-medium">{skill}</span>
+                </motion.div>
               ))}
             </div>
           </Card>
